@@ -13,13 +13,17 @@ interface Callback<R> {
 var lastError: Error = undefined;
 
 export function doAsync<T, R>(func: (...args: T[]) => PromiseLike<R>, context: any, args: (T | Callback<R>)[]) {
-	let callback = args[args.length - 1] as Callback<R>;
-	if (typeof callback === 'function') {
-		args.length--;
-	} else {
-		callback = undefined;
+	let i = args.length - 1;
+	for (; i >= 0 && args[i] === undefined; i--);
+	let callback: Callback<R>;
+	if (i >= 0) {
+		let arg = args[i];
+		if (typeof arg === 'function') {
+			callback = arg as Callback<R>;
+			i--;
+		}
 	}
-	(func.apply(context, args) as PromiseLike<R>).then(
+	(func.apply(context, args.slice(0, i + 1)) as PromiseLike<R>).then(
 		callback,
 		err => {
 			lastError = err;
