@@ -1,10 +1,3 @@
-/*
-Namespace: chrome.storage
-Issues:
- - there is no way to get actual size taken by Settings in UWP
- - serialization differs from Chrome (although it's not a bug, rather a feature since UWP supports more types reliably)
-*/
-
 import { doAsync, wrapAsync } from './runtime';
 import { Event } from './events';
 

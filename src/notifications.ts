@@ -1,12 +1,3 @@
-/*
-Namespace: chrome.wallpaper
-Issues:
- - progress notification is not (can not be) implemented in UWP
- - notification update is not implemented (need to investigate whether possible)
- - onShowSettings is not implemented (anyway "As of Chrome 47, only ChromeOS has UI that dispatches this event.")
- - onPermissionLevelChanged is not implemented (same)
-*/
-
 import { wrapAsync } from './runtime';
 import { Event } from './events';
 

@@ -1,9 +1,3 @@
-/*
-Namespace: chrome.runtime
-Issues:
- - ... (almost nothing is implemented yet) ...
-*/
-
 import { Event } from './events';
 
 interface Callback<R> {

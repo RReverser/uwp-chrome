@@ -1,10 +1,3 @@
-/*
-Namespace: chrome.wallpaper
-Issues:
- - docs about setWallpaper are not very clear (https://github.com/GoogleChrome/chrome-app-samples/issues/427)
- - UWP doesn't support wallpaper layouts, need to implement manual image adjustment
-*/
-
 import { wrapAsync } from './runtime';
 
 const { UserProfilePersonalizationSettings } = Windows.System.UserProfile;
