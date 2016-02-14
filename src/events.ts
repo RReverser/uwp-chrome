@@ -1,3 +1,5 @@
+import { doAsync } from './runtime';
+
 interface Callback<T> {
 	(arg: T): void;
 }
@@ -11,43 +13,42 @@ export class Event<T extends Function> implements chrome.events.Event<T> {
 		this._listeners.add(callback);
 	}
 
+	private async _getRules(ruleIdentifiers?: string[]) {
+		if (ruleIdentifiers) {
+			return ruleIdentifiers.map(id => this._rules.get(id)).filter(Boolean);
+		} else {
+			return Array.from(this._rules.values());
+		}
+	}
+
 	getRules(ruleIdentifiers: string[], callback: (rules: chrome.events.Rule[]) => void): void;
 	getRules(callback: (rules: chrome.events.Rule[]) => void): void;
-	getRules(arg0: any, arg1?: any) {
-		let rules: chrome.events.Rule[];
-		let callback: (rules: chrome.events.Rule[]) => void;
-		if (typeof arg0 === 'function') {
-			rules = Array.from(this._rules.values());
-			callback = arg0;
-		} else {
-			rules = (arg0 as string[]).map(id => this._rules.get(id)).filter(Boolean);
-			callback = arg1;
-		}
-		callback(rules);
+	getRules(...args: (string[] | ((rules: chrome.events.Rule[]) => void))[]) {
+		doAsync(this._getRules, this, args);
 	}
 
 	hasListener(callback: T): boolean {
 		return this._listeners.has(callback);
 	}
 
-	removeRules(ruleIdentifiers: string[], callback?: () => void): void;
-	removeRules(callback?: () => void): void;
-	removeRules(arg0: any, arg1?: any) {
-		let callback: () => void;
-		if (typeof arg0 === 'function') {
-			this._rules.clear();
-			callback = arg0;
-		} else {
-			(arg0 as string[]).forEach(id => {
+	private async _removeRules(ruleIdentifiers?: string[]) {
+		if (ruleIdentifiers) {
+			for (let id of ruleIdentifiers) {
 				this._rules.delete(id);
-			});
-			callback = arg1;
+			}
+		} else {
+			this._rules.clear();
 		}
-		if (callback) callback();
 	}
 
-	addRules(rules: chrome.events.Rule[], callback?: (rules: chrome.events.Rule[]) => void): void {
-		rules.forEach(rule => {
+	removeRules(ruleIdentifiers: string[], callback?: () => void): void;
+	removeRules(callback?: () => void): void;
+	removeRules(...args: (string[] | (() => void))[]) {
+		doAsync(this._removeRules, this, args);
+	}
+
+	private async _addRules(rules: chrome.events.Rule[]) {
+		for (let rule of rules) {
 			if (rule.id === undefined) {
 				rule.id = `_rule_${this._counter++}_`;
 			}
@@ -58,8 +59,13 @@ export class Event<T extends Function> implements chrome.events.Event<T> {
 				rule.priority = 100;
 			}
 			this._rules.set(rule.id, rule);
-		});
-		if (callback) callback(rules);
+		}
+		return rules;
+	}
+
+	addRules(rules: chrome.events.Rule[], callback?: (rules: chrome.events.Rule[]) => void): void;
+	addRules(...args: (chrome.events.Rule[] | ((rules: chrome.events.Rule[]) => void))[]) {
+		doAsync(this._addRules, this, args);
 	}
 
 	removeListener(callback: T): void {
@@ -75,8 +81,8 @@ export class Event<T extends Function> implements chrome.events.Event<T> {
 
 Event.prototype._emit = function() {
 	setImmediate(() => {
-		this._listeners.forEach((listener: Function) => {
+		for (let listener of this._listeners) {
 			listener.apply(this, arguments);
-		});
+		}
 	});
 };

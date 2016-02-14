@@ -51,14 +51,14 @@ export const notifications: typeof chrome.notifications = {
 					}
 				}
 			}
-			children.forEach(child => {
+			for (let child of children) {
 				if (child) {
 					if (typeof child === 'string') {
 						child = toastXML.createTextNode(child as string);
 					}
 					element.appendChild(child as Windows.Data.Xml.Dom.IXmlNode);
 				}
-			});
+			}
 			return element;
 		};
 		toastXML.appendChild(xml(
