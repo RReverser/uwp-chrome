@@ -3,7 +3,7 @@ Experimental chrome API polyfill for Universal Windows Platform (UWP / WinRT)
 
 Current status:
 
-- [ ] chrome
+- [ ] [chrome](https://developer.chrome.com/apps/api_index)
   - [ ] [accessibilityFeatures](https://developer.chrome.com/apps/accessibilityFeatures)
   - [ ] [alarms](https://developer.chrome.com/apps/alarms)
   - [ ] app
@@ -44,7 +44,7 @@ Current status:
   - [ ] system
     - [ ] [cpu](https://developer.chrome.com/apps/system_cpu)
     - [ ] [display](https://developer.chrome.com/apps/system_display)
-    - [ ] [memory](https://developer.chrome.com/apps/system_memory)
+    - [x] [memory](https://developer.chrome.com/apps/system_memory)
     - [ ] [network](https://developer.chrome.com/apps/system_network)
     - [ ] [storage](https://developer.chrome.com/apps/system_storage)
   - [ ] [tts](https://developer.chrome.com/apps/tts)
