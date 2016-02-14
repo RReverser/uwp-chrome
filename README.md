@@ -30,7 +30,7 @@ Current status:
   - [ ] [mediaGalleries](https://developer.chrome.com/apps/mediaGalleries)
   - [x] [notifications](https://developer.chrome.com/apps/notifications)
   - [ ] [permissions](https://developer.chrome.com/apps/permissions)
-  - [ ] [power](https://developer.chrome.com/apps/power)
+  - [x] [power](https://developer.chrome.com/apps/power)
   - [ ] [printerProvider](https://developer.chrome.com/apps/printerProvider)
   - [ ] [runtime](https://developer.chrome.com/apps/runtime)
   - [ ] [serial](https://developer.chrome.com/apps/serial)
