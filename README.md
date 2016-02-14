@@ -47,7 +47,7 @@ Current status:
     - [x] [memory](https://developer.chrome.com/apps/system_memory)
     - [ ] [network](https://developer.chrome.com/apps/system_network)
     - [ ] [storage](https://developer.chrome.com/apps/system_storage)
-  - [ ] [tts](https://developer.chrome.com/apps/tts)
+  - [x] [tts](https://developer.chrome.com/apps/tts)
   - [x] [*types*](https://developer.chrome.com/apps/types)
   - [ ] [usb](https://developer.chrome.com/apps/usb)
   - [ ] [vpnProvider](https://developer.chrome.com/apps/vpnProvider)

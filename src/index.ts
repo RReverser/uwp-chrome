@@ -3,6 +3,7 @@ import { power } from './power';
 import { runtime } from './runtime';
 import { storage } from './storage';
 import { system } from './system/index';
+import { tts } from './tts';
 import { wallpaper } from './wallpaper';
 
 export {
@@ -11,5 +12,6 @@ export {
 	runtime,
 	storage,
 	system,
+	tts,
 	wallpaper
 };
