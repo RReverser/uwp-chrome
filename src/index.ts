@@ -1,3 +1,4 @@
+import { identity } from './identity';
 import { notifications } from './notifications';
 import { power } from './power';
 import { runtime } from './runtime';
@@ -7,6 +8,7 @@ import { tts } from './tts';
 import { wallpaper } from './wallpaper';
 
 export {
+	identity,
 	notifications,
 	power,
 	runtime,
