@@ -4,10 +4,13 @@
         "noImplicitAny": true,
         "outDir": "dist",
         "module": "amd",
-        "suppressExcessPropertyErrors": true
+        "suppressExcessPropertyErrors": true,
+        "jsx": "react",
+        "reactNamespace": "jsx"
     },
     "files": [
         "typings/tsd.d.ts",
+        "src/jsx.d.ts",
         "src/index.ts"
     ]
 }

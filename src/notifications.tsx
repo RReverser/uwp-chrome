@@ -12,6 +12,35 @@ const onClosed = new Event<(notificationId: string, byUser: boolean) => void>();
 const onClicked = new Event<(notificationId: string) => void>();
 const onButtonClicked = new Event<(notificationId: string, buttonIndex: number) => void>();
 
+class JSXML {
+	public document = new Windows.Data.Xml.Dom.XmlDocument();
+
+	addChildren(parent: JSX.Element, children: (JSX.Element | JSX.Element[] | string)[]) {
+		for (let child of children) {
+			if (typeof child === 'string') {
+				parent.appendChild(this.document.createTextNode(child));
+			} else if (Array.isArray(child)) {
+				this.addChildren(parent, child);
+			} else if (child) {
+				parent.appendChild(child);
+			}
+		}
+	}
+
+	createElement(type: string, props: { [key: string]: any }, ...children: (JSX.Element | JSX.Element[] | string)[]) {
+		let element = this.document.createElement(type);
+		if (props) {
+			for (let key in props) {
+				if (props[key]) {
+					element.setAttribute(key, props[key]);
+				}
+			}
+		}
+		this.addChildren(element, children);
+		return element;
+	}
+}
+
 export const notifications: typeof chrome.notifications = {
 	onClosed,
 	onClicked,
@@ -32,49 +61,24 @@ export const notifications: typeof chrome.notifications = {
 		if (options.type !== 'basic' && options.type !== 'image' && options.type !== 'list') {
 			throw new TypeError(`Unsupported notification type ${options.type}`);
 		}
-		let toastXML = new XmlDocument();
-		const xml = (type: string, props: { [key: string]: string }, ...children: (Windows.Data.Xml.Dom.IXmlNode | string)[]) => {
-			let element = toastXML.createElement(type);
-			if (props) {
-				for (let key in props) {
-					if (props[key]) {
-						element.setAttribute(key, props[key]);
-					}
-				}
-			}
-			for (let child of children) {
-				if (child) {
-					if (typeof child === 'string') {
-						child = toastXML.createTextNode(child as string);
-					}
-					element.appendChild(child as Windows.Data.Xml.Dom.IXmlNode);
-				}
-			}
-			return element;
-		};
-		toastXML.appendChild(xml(
-			'toast',
-			null,
-			xml('visual', null, xml(
-				'binding',
-				{ template: 'ToastGeneric' },
-				xml('text', null, options.title),
-				options.message && xml('text', null, options.message),
-				...(options.items || []).map(item => xml('text', null, `${item.title}: ${item.message}`)),
-				options.iconUrl && xml('image', { placement: 'appLogoOverride', src: options.iconUrl }),
-				options.type === 'image' && xml('image', { placement: 'inline', src: options.imageUrl })
-			)),
-			options.buttons && options.buttons.length && xml(
-				'actions',
-				null,
-				...options.buttons.map((button, i) => xml('action', {
-					imageUri: button.iconUrl,
-					content: button.title,
-					arguments: String(i)
-				}))
-			)
-		));
-		let toast = new ToastNotification(toastXML);
+		const jsx = new JSXML();
+		jsx.document.appendChild(<toast>
+			<visual>
+				<binding template="ToastGeneric">
+					<text>{options.title}</text>
+					<text>
+						{options.message}
+						{options.items && options.items.map(item => `${item.title}: ${item.message}`).join('\n')}
+					</text>
+					{options.iconUrl && <image placement="appLogoOverride" src={options.iconUrl} />}
+					{options.type === 'image' && <image placement="inline" src={options.imageUrl} />}
+				</binding>
+				{options.buttons && <actions>{
+					options.buttons.map((button, i) => <action imageUri={button.iconUrl} content={button.title} arguments={i.toString()} />)
+				}</actions>}
+			</visual>
+		</toast>);
+		let toast = new ToastNotification(jsx.document);
 		toast.tag = notificationId;
 		toast.onactivated = ({ detail: [{ arguments: args }]}) => {
 			if (args) {
