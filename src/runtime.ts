@@ -1,5 +1,7 @@
 import { Event } from './events';
 
+const arch = ['x86-32', 'arm', 'x86-64'][Windows.ApplicationModel.Package.current.id.architecture];
+
 interface Callback<R> {
 	(result?: R): void;
 }
@@ -46,5 +48,11 @@ export const runtime: typeof chrome.runtime = {
 		return err;
 	},
 
-	id: Windows.ApplicationModel.Store.CurrentApp.appId
+	id: Windows.ApplicationModel.Store.CurrentApp.appId,
+
+	getPlatformInfo: wrapAsync(async () => ({
+		os: 'win',
+		arch,
+		nacl_arch: arch
+	}))
 };
