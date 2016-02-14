@@ -1,0 +1,26 @@
+{
+  "name": "uwp-chrome",
+  "version": "1.0.0",
+  "description": "chrome API polyfill for UWP / WinRT",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rreverser/uwp-chrome.git"
+  },
+  "keywords": [
+    "chrome",
+    "app",
+    "api",
+    "polyfill",
+    "uwp",
+    "winrt",
+    "winjs",
+    "windows"
+  ],
+  "author": "Ingvar Stepanyan <me@rreverser.com> (https://rreverser.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rreverser/uwp-chrome/issues"
+  },
+  "homepage": "https://github.com/rreverser/uwp-chrome#readme"
+}

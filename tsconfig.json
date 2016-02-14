@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "noImplicitAny": true,
+        "outDir": "dist",
+        "module": "amd",
+        "suppressExcessPropertyErrors": true
+    },
+    "files": [
+        "typings/tsd.d.ts",
+        "src/index.ts"
+    ]
+}
