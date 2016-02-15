@@ -1,8 +1,10 @@
 import { runtime, wrapAsync } from './runtime';
 
 const { WebAuthenticationBroker, WebAuthenticationOptions, WebAuthenticationStatus } = Windows.Security.Authentication.Web;
-const { HttpStatusCode } = Windows.Web.Http;
+const { HttpStatusCode, HttpClient, HttpFormUrlEncodedContent } = Windows.Web.Http;
 const { Uri } = Windows.Foundation;
+const { StringMap } = Windows.Foundation.Collections;
+
 type Uri = Windows.Foundation.Uri;
 
 async function authenticate(interactive: boolean, start: Uri, end: Uri) {
@@ -27,10 +29,6 @@ async function authenticate(interactive: boolean, start: Uri, end: Uri) {
 	}
 }
 
-function uri(strings: TemplateStringsArray, ...values: any[]) {
-	return String.raw(strings, values.map(encodeURIComponent));
-}
-
 const googleCallbackUrl = 'http://localhost/';
 const googleCallbackUri = new Uri(googleCallbackUrl);
 
@@ -39,7 +37,7 @@ export const identity: typeof chrome.identity = {
 		let clientId = '';
 		let url = await authenticate(
 			false,
-			new Windows.Foundation.Uri(`https://accounts.google.com/o/oauth2/auth?client_id=${
+			new Uri(`https://accounts.google.com/o/oauth2/auth?client_id=${
 				encodeURIComponent(clientId)
 			}&redirect_uri=${
 				encodeURIComponent(googleCallbackUrl)
@@ -48,15 +46,15 @@ export const identity: typeof chrome.identity = {
 			}`),
 			googleCallbackUri
 		);
-		let code = new Windows.Foundation.Uri(url).queryParsed.getFirstValueByName('code');
-		let content = new Windows.Foundation.Collections.StringMap();
+		let code = new Uri(url).queryParsed.getFirstValueByName('code');
+		let content = new StringMap();
 		content.insert('code', code);
 		content.insert('client_id', clientId);
 		content.insert('redirect_uri', googleCallbackUrl);
 		content.insert('grant_type', 'authorization_code');
-		let http = new Windows.Web.Http.HttpClient();
+		let http = new HttpClient();
 		try {
-			let response = await http.postAsync(new Uri('https://www.googleapis.com/oauth2/v4/token'), new Windows.Web.Http.HttpFormUrlEncodedContent(content));
+			let response = await http.postAsync(new Uri('https://www.googleapis.com/oauth2/v4/token'), new HttpFormUrlEncodedContent(content));
 			try {
 				response.ensureSuccessStatusCode();
 				let {

@@ -3,7 +3,7 @@ import { wrapAsync } from './runtime';
 const { SpeechSynthesizer, VoiceGender } = Windows.Media.SpeechSynthesis;
 
 const audio = document.createElement('audio');
-const synth = new Windows.Media.SpeechSynthesis.SpeechSynthesizer();
+const synth = new SpeechSynthesizer();
 const queue: string[] = [];
 
 function playAudio(src: string) {

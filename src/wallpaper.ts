@@ -1,16 +1,17 @@
 import { wrapAsync } from './runtime';
 
 const { UserProfilePersonalizationSettings } = Windows.System.UserProfile;
-const { ApplicationData, CreationCollisionOption } = Windows.Storage;
+const { ApplicationData, CreationCollisionOption, FileIO } = Windows.Storage;
 const { BackgroundDownloader } = Windows.Networking.BackgroundTransfer;
 const { Uri } = Windows.Foundation;
-const { FileIO } = Windows.Storage;
+
+type IStorageFile = Windows.Storage.IStorageFile;
 
 const downloader = new BackgroundDownloader();
 const tempFolder = ApplicationData.current.temporaryFolder;
 const personalization = UserProfilePersonalizationSettings.current;
 
-function getThumbnail(file: Windows.Storage.IStorageFile) {
+function getThumbnail(file: IStorageFile) {
 	let img = new Image();
 	img.src = URL.createObjectURL(MSApp.createFileFromStorageFile(file));
 	let canvas = document.createElement('canvas');

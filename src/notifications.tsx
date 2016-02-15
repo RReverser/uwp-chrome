@@ -13,7 +13,7 @@ const onClicked = new Event<(notificationId: string) => void>();
 const onButtonClicked = new Event<(notificationId: string, buttonIndex: number) => void>();
 
 class JSXML {
-	public document = new Windows.Data.Xml.Dom.XmlDocument();
+	public document = new XmlDocument();
 
 	addChildren(parent: JSX.Element, children: (JSX.Element | JSX.Element[] | string)[]) {
 		for (let child of children) {
