@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "chrome API polyfill for UWP / WinRT",
   "main": "dist/index.js",
+  "scripts": {
+    "postinstall": "tsd install"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rreverser/uwp-chrome.git"
@@ -22,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/rreverser/uwp-chrome/issues"
   },
-  "homepage": "https://github.com/rreverser/uwp-chrome#readme"
+  "homepage": "https://github.com/rreverser/uwp-chrome#readme",
+  "devDependencies": {
+    "tsd": "^0.6.5"
+  }
 }

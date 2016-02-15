@@ -1,3 +1,3 @@
 /dist
-typings/**/*.d.ts
-!typings/winrt/winrt-uwp.d.ts # https://github.com/SaschaNaz/uwp-type-generator/issues/4 (manually added until TSD update)
+/typings
+/node_modules
