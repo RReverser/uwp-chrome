@@ -43,7 +43,7 @@ Current status:
   - [ ] [syncFileSystem](https://developer.chrome.com/apps/syncFileSystem)
   - [ ] system
     - [ ] [cpu](https://developer.chrome.com/apps/system_cpu)
-    - [ ] [display](https://developer.chrome.com/apps/system_display)
+    - [x] [display](https://developer.chrome.com/apps/system_display)
     - [x] [memory](https://developer.chrome.com/apps/system_memory)
     - [ ] [network](https://developer.chrome.com/apps/system_network)
     - [ ] [storage](https://developer.chrome.com/apps/system_storage)
