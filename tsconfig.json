@@ -6,7 +6,8 @@
         "module": "amd",
         "suppressExcessPropertyErrors": true,
         "jsx": "react",
-        "reactNamespace": "jsx"
+        "reactNamespace": "jsx",
+        "moduleResolution": "node"
     },
     "files": [
         "typings/tsd.d.ts",

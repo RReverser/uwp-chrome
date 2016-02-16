@@ -7,8 +7,9 @@ interface Callback<R> {
 }
 
 var lastError: Error = undefined;
+var checkedLastError: boolean = true;
 
-export function doAsync<T, R>(func: (...args: T[]) => PromiseLike<R>, context: any, args: (T | Callback<R>)[]) {
+export async function doAsync<R>(func: (...args: any[]) => PromiseLike<R>, context: any, args: any[]) {
 	let i = args.length - 1;
 	for (; i >= 0 && args[i] === undefined; i--);
 	let callback: Callback<R>;
@@ -19,16 +20,22 @@ export function doAsync<T, R>(func: (...args: T[]) => PromiseLike<R>, context: a
 			i--;
 		}
 	}
-	(func.apply(context, args.slice(0, i + 1)) as PromiseLike<R>).then(
-		callback,
-		err => {
-			lastError = err;
-			if (callback) callback();
-			if (lastError !== undefined) {
-				console.warn(`Unchecked runtime.lastError: ${lastError.message}.`);
-			}
-		}
-	);
+	let res: R;
+	try {
+		res = await func.apply(context, args.slice(0, i + 1));
+		lastError = undefined;
+		checkedLastError = true;
+	} catch (e) {
+		lastError = e;
+		checkedLastError = false;
+	}
+	if (callback) {
+		callback();
+	}
+	if (!checkedLastError) {
+		checkedLastError = true;
+		throw new Error(`Unchecked runtime.lastError: ${lastError}.`);
+	}
 }
 
 export function wrapAsync<R>(func: () => PromiseLike<R>): (callback: Callback<R>) => void;
@@ -43,9 +50,8 @@ export function wrapAsync<T, R>(func: (...args: T[]) => PromiseLike<R>): (...arg
 
 export const runtime: typeof chrome.runtime = {
 	get lastError() {
-		let err = lastError;
-		lastError = undefined;
-		return err;
+		checkedLastError = true;
+		return lastError;
 	},
 
 	id: Windows.ApplicationModel.Store.CurrentApp.appId,

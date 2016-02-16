@@ -36,7 +36,7 @@ Current status:
   - [ ] [serial](https://developer.chrome.com/apps/serial)
   - [ ] [socket](https://developer.chrome.com/apps/socket)
   - [ ] [sockets](https://developer.chrome.com/apps/sockets)
-    - [ ] [tcp](https://developer.chrome.com/apps/sockets_tcp)
+    - [x] [tcp](https://developer.chrome.com/apps/sockets_tcp)
     - [ ] [tcpServer](https://developer.chrome.com/apps/sockets_tcpServer)
     - [ ] [udp](https://developer.chrome.com/apps/sockets_udp)
   - [x] [storage](https://developer.chrome.com/apps/storage)
