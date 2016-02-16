@@ -1,6 +1,8 @@
 import { Event } from './events';
 
-const arch = ['x86-32', 'arm', 'x86-64'][Windows.ApplicationModel.Package.current.id.architecture];
+const { Uri } = Windows.Foundation;
+
+const arch = ['x86-32', 'arm', 'x86-64'][Windows.ApplicationModel.Package.current.id.architecture] || 'unknown';
 
 interface Callback<R> {
 	(result?: R): void;
@@ -48,17 +50,82 @@ export function wrapAsync<T, R>(func: (...args: T[]) => PromiseLike<R>): (...arg
 	};
 }
 
+const onConnect: chrome.runtime.ExtensionConnectEvent = new Event();
+const onConnectExternal: chrome.runtime.RuntimeEvent = new Event();
+const onSuspend: chrome.runtime.RuntimeEvent = new Event();
+const onStartup: chrome.runtime.RuntimeEvent = new Event();
+const onInstalled: chrome.runtime.RuntimeInstalledEvent = new Event();
+const onSuspendCanceled: chrome.runtime.RuntimeEvent = new Event();
+const onMessage: chrome.runtime.ExtensionMessageEvent = new Event();
+const onMessageExternal: chrome.runtime.ExtensionMessageEvent = new Event();
+const onRestartRequired: chrome.runtime.RuntimeRestartRequiredEvent = new Event();
+const onUpdateAvailable: chrome.runtime.RuntimeUpdateAvailableEvent = new Event();
+const onBrowserUpdateAvailable: chrome.runtime.RuntimeEvent = new Event();
+
 export const runtime: typeof chrome.runtime = {
+	onConnect,
+	onConnectExternal,
+	onSuspend,
+	onStartup,
+	onInstalled,
+	onSuspendCanceled,
+	onMessage,
+	onMessageExternal,
+	onRestartRequired,
+	onUpdateAvailable,
+	onBrowserUpdateAvailable,
+	
 	get lastError() {
 		checkedLastError = true;
 		return lastError;
 	},
 
-	id: Windows.ApplicationModel.Store.CurrentApp.appId,
+	id: '',
+	
+	getManifest() {
+		return manifest;
+	},
+	
+	getURL(path: string) {
+		return new Uri(`ms-appx-web:///`, path).absoluteUri;
+	},
+	
+	reload() {
+		location.reload();
+	},
+	
+	restart() {},
+	
+	setUninstallURL: wrapAsync(async () => {
+		throw new Error('Windows app cannot trigger custom actions on removal.');
+	}),
 
-	getPlatformInfo: wrapAsync(async () => ({
+	getPlatformInfo: wrapAsync(() => Promise.resolve({
 		os: 'win',
 		arch,
 		nacl_arch: arch
 	}))
 };
+
+export function requireSetup<T>(name: string, setup: (shim: T) => void) {
+	function setupWrapper(shim: T) {
+		clearImmediate(warning);
+		setup(shim);		
+	}
+	
+	let warning = setImmediate(() => {
+		console.warn(`chrome.${name}::setup({ ... }) needs to be called during initialization, but wasn't.`);
+	});
+}
+
+interface Shim {
+	id: string;
+	manifest: chrome.runtime.Manifest;
+}
+
+var manifest: chrome.runtime.Manifest;
+
+export const setup = requireSetup('runtime', (shim: Shim) => {
+	runtime.id = shim.id;
+	manifest = shim.manifest;
+});
