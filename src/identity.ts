@@ -53,10 +53,8 @@ namespace Google {
 		}[]
 	}
 
-	export var userInfo = {
-		id: '',
-		email: ''
-	};
+	export var userId = '';
+	export var userEmail = '';
 
 	export async function auth(interactive: boolean, clientId: string, scopes: string[] = basicScopes) {
 		let url = await authenticate(
@@ -95,11 +93,9 @@ namespace Google {
 		try {
 			http.defaultRequestHeaders.authorization = new HttpCredentialsHeaderValue(authResult.token_type, authResult.access_token);
 			let profile = JSON.parse(await http.getStringAsync(profileUri)) as Profile;
+			userId = profile.id || '';
 			let accEmail = profile.emails.find(email => email.type === 'account');
-			userInfo = {
-				id: profile.id || '',
-				email: accEmail ? accEmail.value : ''
-			};
+			userEmail = accEmail ? accEmail.value : '';
 			return profile;
 		} finally {
 			http.close();
@@ -114,7 +110,10 @@ export const identity: typeof chrome.identity = {
 		return authResult.access_token;
 	}),
 
-	getProfileUserInfo: wrapAsync(() => Promise.resolve(Google.userInfo)),
+	getProfileUserInfo: wrapAsync(() => Promise.resolve({
+		id: Google.userId,
+		email: Google.userEmail
+	})),
 
 	launchWebAuthFlow: wrapAsync((details: chrome.identity.WebAuthFlowOptions) => authenticate(
 		details.interactive,
