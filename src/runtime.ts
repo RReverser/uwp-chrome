@@ -32,7 +32,7 @@ export async function doAsync<R>(func: (...args: any[]) => PromiseLike<R>, conte
 		checkedLastError = false;
 	}
 	if (callback) {
-		callback();
+		callback(res);
 	}
 	if (!checkedLastError) {
 		checkedLastError = true;
