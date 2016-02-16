@@ -1,12 +1,17 @@
 import { Event } from './events';
 
 const { Uri } = Windows.Foundation;
+const { ApplicationViewSwitcher } = Windows.UI.ViewManagement;
 
 const arch = ['x86-32', 'arm', 'x86-64'][Windows.ApplicationModel.Package.current.id.architecture] || 'unknown';
 
 interface Callback<R> {
 	(result?: R): void;
 }
+
+type UpdateStatus = 'throttled' | 'no_update' | 'update_available';
+
+type UpdateCallbackArgs = ['throttled' | 'update_available', chrome.runtime.UpdateCheckDetails] | ['no_update'];
 
 var lastError: Error = undefined;
 var checkedLastError: boolean = true;
@@ -74,28 +79,30 @@ export const runtime: typeof chrome.runtime = {
 	onRestartRequired,
 	onUpdateAvailable,
 	onBrowserUpdateAvailable,
-	
+
 	get lastError() {
 		checkedLastError = true;
 		return lastError;
 	},
 
-	id: '',
-	
-	getManifest() {
-		return manifest;
+	get id() {
+		return shim.id;
 	},
-	
+
+	getManifest() {
+		return shim.manifest;
+	},
+
 	getURL(path: string) {
 		return new Uri(`ms-appx-web:///`, path).absoluteUri;
 	},
-	
+
 	reload() {
 		location.reload();
 	},
-	
+
 	restart() {},
-	
+
 	setUninstallURL: wrapAsync(async () => {
 		throw new Error('Windows app cannot trigger custom actions on removal.');
 	}),
@@ -104,15 +111,37 @@ export const runtime: typeof chrome.runtime = {
 		os: 'win',
 		arch,
 		nacl_arch: arch
-	}))
+	})),
+
+	requestUpdateCheck(callback: (status: UpdateStatus, details?: chrome.runtime.UpdateCheckDetails) => void) {
+		if (shim.requestUpdateCheck) {
+			let checkResult: UpdateCallbackArgs;
+			doAsync(async () => {
+				checkResult = await shim.requestUpdateCheck();
+			}, this, [() => callback.apply(null, checkResult)]);
+		} else {
+			callback('no_update');
+		}
+	},
+
+	getBackgroundPage: wrapAsync(() => shim.getBackgroundPage()),
+
+	openOptionsPage: wrapAsync(async () => {
+		let manifest = runtime.getManifest();
+		let { page = manifest.options_page } = manifest.options_ui;
+		let view = MSApp.createNewView(page);
+		if (!(await ApplicationViewSwitcher.tryShowAsStandaloneAsync(view.viewId))) {
+			throw new Error('Could not show options page.');
+		}
+	})
 };
 
 export function requireSetup<T>(name: string, setup: (shim: T) => void) {
 	function setupWrapper(shim: T) {
 		clearImmediate(warning);
-		setup(shim);		
+		setup(shim);
 	}
-	
+
 	let warning = setImmediate(() => {
 		console.warn(`chrome.${name}::setup({ ... }) needs to be called during initialization, but wasn't.`);
 	});
@@ -121,11 +150,12 @@ export function requireSetup<T>(name: string, setup: (shim: T) => void) {
 interface Shim {
 	id: string;
 	manifest: chrome.runtime.Manifest;
+	requestUpdateCheck?: () => Promise<UpdateCallbackArgs>;
+	getBackgroundPage?: () => Promise<Window>;
 }
 
-var manifest: chrome.runtime.Manifest;
+var shim: Shim;
 
-export const setup = requireSetup('runtime', (shim: Shim) => {
-	runtime.id = shim.id;
-	manifest = shim.manifest;
+export const setup = requireSetup('runtime', (passedShim: Shim) => {
+	shim = passedShim;
 });
