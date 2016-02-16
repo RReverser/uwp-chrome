@@ -34,8 +34,15 @@ class SocketEntry {
 		try {
 			while (this.connected && !this.paused) {
 				await this.dataReader.loadAsync(this.props.bufferSize || 4096);
-				if (!this.connected || this.paused) break;
-				let bytes = new Uint8Array(this.dataReader.unconsumedBufferLength);
+				if (!this.connected || this.paused) {
+					break;
+				}
+				let { unconsumedBufferLength } = this.dataReader;
+				if (unconsumedBufferLength === 0) {
+					this.connected = false;
+					break;
+				}
+				let bytes = new Uint8Array(unconsumedBufferLength);
 				this.dataReader.readBytes(bytes);
 				onReceive._emit({
 					socketId: this.socketId,
