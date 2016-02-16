@@ -39,9 +39,9 @@ export async function doAsync<R>(func: (...args: any[]) => PromiseLike<R>, conte
 }
 
 export function wrapAsync<R>(func: () => PromiseLike<R>): (callback: Callback<R>) => void;
-export function wrapAsync<T0, R>(func: (arg0: T0) => PromiseLike<R>): (arg0: T0, callback: Callback<R>) => void;
-export function wrapAsync<T0, T1, R>(func: (arg0: T0, arg1: T1) => PromiseLike<R>): (arg0: T0, arg1: T1, callback: Callback<R>) => void;
-export function wrapAsync<T0, T1, T2, R>(func: (arg0: T0, arg1: T1, arg2: T2) => PromiseLike<R>): (arg0: T0, arg1: T1, arg2: T2, callback: Callback<R>) => void;
+export function wrapAsync<T0, R>(func: (arg0: T0) => PromiseLike<R>): (arg0: T0, callback?: Callback<R>) => void;
+export function wrapAsync<T0, T1, R>(func: (arg0: T0, arg1: T1) => PromiseLike<R>): (arg0: T0, arg1: T1, callback?: Callback<R>) => void;
+export function wrapAsync<T0, T1, T2, R>(func: (arg0: T0, arg1: T1, arg2: T2) => PromiseLike<R>): (arg0: T0, arg1: T1, arg2: T2, callback?: Callback<R>) => void;
 export function wrapAsync<T, R>(func: (...args: T[]) => PromiseLike<R>): (...args: (T | Callback<R>)[]) => void {
 	return function(...args) {
 		doAsync(func, this, args);

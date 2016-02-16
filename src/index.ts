@@ -1,3 +1,4 @@
+import { browser } from './browser';
 import { identity } from './identity';
 import { notifications } from './notifications';
 import { power } from './power';
@@ -9,6 +10,7 @@ import { tts } from './tts';
 import { wallpaper } from './wallpaper';
 
 export {
+	browser,
 	identity,
 	notifications,
 	power,

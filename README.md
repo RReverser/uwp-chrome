@@ -12,7 +12,7 @@ Current status:
   - [ ] [bluetooth](https://developer.chrome.com/apps/bluetooth)
   - [ ] [bluetoothLowEnergy](https://developer.chrome.com/apps/bluetoothLowEnergy)
   - [ ] [bluetoothSocket](https://developer.chrome.com/apps/bluetoothSocket)
-  - [ ] [browser](https://developer.chrome.com/apps/browser)
+  - [x] [browser](https://developer.chrome.com/apps/browser)
   - [ ] [commands](https://developer.chrome.com/apps/commands)
   - [ ] [contextMenus](https://developer.chrome.com/apps/contextMenus)
   - [ ] [documentScan](https://developer.chrome.com/apps/documentScan)
