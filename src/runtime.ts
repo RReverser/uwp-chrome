@@ -129,10 +129,7 @@ export const runtime: typeof chrome.runtime = {
 	openOptionsPage: wrapAsync(async () => {
 		let manifest = runtime.getManifest();
 		let { page = manifest.options_page } = manifest.options_ui;
-		let view = MSApp.createNewView(page);
-		if (!(await ApplicationViewSwitcher.tryShowAsStandaloneAsync(view.viewId))) {
-			throw new Error('Could not show options page.');
-		}
+		window.open(page);
 	})
 };
 
