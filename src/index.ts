@@ -1,4 +1,5 @@
 import { browser } from './browser';
+import { fileSystem } from './fileSystem';
 import { identity } from './identity';
 import { notifications } from './notifications';
 import { power } from './power';
@@ -11,6 +12,7 @@ import { wallpaper } from './wallpaper';
 
 export {
 	browser,
+	fileSystem,
 	identity,
 	notifications,
 	power,

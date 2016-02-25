@@ -1,4 +1,5 @@
 import { Event } from './events';
+import { createPickedEntry } from './fileSystem';
 
 const { Uri } = Windows.Foundation;
 const { ApplicationViewSwitcher } = Windows.UI.ViewManagement;
@@ -133,6 +134,10 @@ export const runtime: typeof chrome.runtime = {
 		if (!(await ApplicationViewSwitcher.tryShowAsStandaloneAsync(view.viewId))) {
 			throw new Error('Could not show options page.');
 		}
+	}),
+
+	getPackageDirectoryEntry: wrapAsync(async () => {
+		return createPickedEntry(Windows.ApplicationModel.Package.current.installedLocation);
 	})
 };
 

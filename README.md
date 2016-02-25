@@ -18,7 +18,7 @@ Current status:
   - [ ] [documentScan](https://developer.chrome.com/apps/documentScan)
   - [x] [*events*](https://developer.chrome.com/apps/events)
   - [x] [*extensionTypes*](https://developer.chrome.com/apps/extensionTypes)
-  - [ ] [fileSystem](https://developer.chrome.com/apps/fileSystem)
+  - [x] [fileSystem](https://developer.chrome.com/apps/fileSystem)
   - [ ] [fileSystemProvider](https://developer.chrome.com/apps/fileSystemProvider)
   - [ ] [gcm](https://developer.chrome.com/apps/gcm)
   - [ ] [hid](https://developer.chrome.com/apps/hid)
