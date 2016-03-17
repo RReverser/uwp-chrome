@@ -3,7 +3,7 @@ import { fileSystem } from './fileSystem';
 import { identity } from './identity';
 import { notifications } from './notifications';
 import { power } from './power';
-import { runtime } from './runtime';
+import { runtime, RuntimeShim, setupRuntime } from './runtime';
 import { sockets } from './sockets';
 import { storage } from './storage';
 import { system } from './system';
@@ -22,3 +22,7 @@ export {
 	tts,
 	wallpaper
 };
+
+export function setup(shim: RuntimeShim) {
+	setupRuntime(shim);
+}

@@ -6,22 +6,22 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "chrome/chrome-app.d.ts": {
-      "commit": "3a167ca79efa24f7e6f831773ab6f99643c68204"
+      "commit": "2f47c75835b837777a85287611703d683b0aaa83"
     },
     "webrtc/MediaStream.d.ts": {
-      "commit": "bda9391b4987bbf91a713ccaf586c108106ced1f"
+      "commit": "2f47c75835b837777a85287611703d683b0aaa83"
     },
     "filewriter/filewriter.d.ts": {
-      "commit": "bda9391b4987bbf91a713ccaf586c108106ced1f"
+      "commit": "2f47c75835b837777a85287611703d683b0aaa83"
     },
     "filesystem/filesystem.d.ts": {
-      "commit": "bda9391b4987bbf91a713ccaf586c108106ced1f"
+      "commit": "2f47c75835b837777a85287611703d683b0aaa83"
     },
     "chrome/chrome.d.ts": {
-      "commit": "2757555ef006cb51475da1cb611b42e61a45cc60"
+      "commit": "2f47c75835b837777a85287611703d683b0aaa83"
     },
     "winrt/winrt-uwp.d.ts": {
-      "commit": "01fc50d96271f22e813b7ad27f55991474b22df4"
+      "commit": "2f47c75835b837777a85287611703d683b0aaa83"
     }
   }
 }

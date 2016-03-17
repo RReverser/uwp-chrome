@@ -5,6 +5,7 @@
         "outDir": "dist",
         "module": "amd",
         "suppressExcessPropertyErrors": true,
+        "experimentalDecorators": true,
         "jsx": "react",
         "reactNamespace": "jsx",
         "moduleResolution": "node"

@@ -141,26 +141,15 @@ export const runtime: typeof chrome.runtime = {
 	})
 };
 
-export function requireSetup<T>(name: string, setup: (shim: T) => void) {
-	function setupWrapper(shim: T) {
-		clearImmediate(warning);
-		setup(shim);
-	}
-
-	let warning = setImmediate(() => {
-		console.warn(`chrome.${name}::setup({ ... }) needs to be called during initialization, but wasn't.`);
-	});
-}
-
-interface Shim {
+export interface RuntimeShim {
 	id: string;
 	manifest: chrome.runtime.Manifest;
 	requestUpdateCheck?: () => Promise<UpdateCallbackArgs>;
 	getBackgroundPage?: () => Promise<Window>;
 }
 
-var shim: Shim;
+var shim: RuntimeShim;
 
-export const setup = requireSetup('runtime', (passedShim: Shim) => {
-	shim = passedShim;
-});
+export function setupRuntime(runtimeShim: RuntimeShim) {
+	shim = runtimeShim;
+}
