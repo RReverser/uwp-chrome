@@ -1,4 +1,5 @@
 import { Event } from './events';
+import { createPickedEntry } from './fileSystem';
 
 const { Uri } = Windows.Foundation;
 const { ApplicationViewSwitcher } = Windows.UI.ViewManagement;
@@ -129,7 +130,14 @@ export const runtime: typeof chrome.runtime = {
 	openOptionsPage: wrapAsync(async () => {
 		let manifest = runtime.getManifest();
 		let { page = manifest.options_page } = manifest.options_ui;
+		if (!page) {
+			throw new Error('No options page found in manifest.');
+		}
 		window.open(page);
+	}),
+
+	getPackageDirectoryEntry: wrapAsync(async () => {
+		return createPickedEntry(Windows.ApplicationModel.Package.current.installedLocation);
 	})
 };
 
